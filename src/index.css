@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 900;
+}
+
+code, pre {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', 'Consolas', 'Monaco', 'Menlo', monospace !important;
+  font-variant-ligatures: none !important;
+  font-feature-settings: normal !important;
+}
+
+body {
+  background: #FAFAF5;
+  overflow-x: hidden;
+}
+
+/* Neobrutalist Components */
+@layer components {
+  .neo-box {
+    @apply border-2 md:border-4 border-black transition-all duration-200;
+    box-shadow: 3px 3px 0 #000;
+    position: relative;
+  }
+  
+  @media (min-width: 768px) {
+    .neo-box {
+      box-shadow: 6px 6px 0 #000;
+    }
+  }
+  
+  .neo-box:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 #000;
+  }
+  
+  @media (min-width: 768px) {
+    .neo-box:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 #000;
+    }
+  }
+  
+  .snippet-card {
+    overflow: visible;
+    margin-bottom: 8px;
+  }
+  
+  .neo-button {
+    @apply border-2 md:border-4 border-black transition-all duration-200 cursor-pointer font-bold;
+    box-shadow: 2px 2px 0 #000;
+  }
+  
+  @media (min-width: 768px) {
+    .neo-button {
+      box-shadow: 4px 4px 0 #000;
+    }
+  }
+  
+  .neo-button:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 #000;
+  }
+  
+  @media (min-width: 768px) {
+    .neo-button:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 #000;
+    }
+  }
+  
+  .neo-button:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 #000;
+  }
+  
+  @media (min-width: 768px) {
+    .neo-button:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0 #000;
+    }
+  }
+  
+  .tag {
+    @apply inline-block border-2 border-black px-2 py-0.5 md:px-3 md:py-1 font-bold text-xs md:text-sm;
+    color: #000;
+  }
+}
+
+/* Code Syntax Highlighting - Prism.js Overrides */
+pre[class*="language-"],
+code[class*="language-"] {
+  font-family: 'Fira Code', 'Courier New', 'Consolas', 'Monaco', 'Menlo', monospace !important;
+  text-shadow: none !important;
+  font-variant-ligatures: none !important;
+  font-feature-settings: normal !important;
+  -webkit-font-feature-settings: normal !important;
+  -moz-font-feature-settings: normal !important;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+code[class*="language-"] *,
+code[class*="language-"] span,
+code[class*="language-"] .token {
+  font-family: 'Fira Code', 'Courier New', 'Consolas', 'Monaco', 'Menlo', monospace !important;
+  font-variant-ligatures: none !important;
+  font-feature-settings: normal !important;
+  -webkit-font-feature-settings: normal !important;
+  -moz-font-feature-settings: normal !important;
+}
+
+pre[class*="language-"] {
+  background: #1e1e1e !important;
+  border: none !important;
+  border-radius: 0 !important;
+  overflow-x: auto;
+  margin: 0 !important;
+  line-height: 1.75rem !important;
+}
+
+code[class*="language-"] {
+  color: #e8e8e8 !important;
+  font-size: inherit !important;
+  line-height: 1.75rem !important;
+  background: transparent !important;
+  display: block;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Default text color for code - tokens will override this */
+code[class*="language-"]:not(.token) {
+  color: #e8e8e8 !important;
+}
+
+code[class*="language-"] .token,
+code[class*="language-"] span {
+  line-height: 1.75rem !important;
+  display: inline-block;
+  vertical-align: baseline;
+  font-variant-ligatures: none !important;
+  font-feature-settings: normal !important;
+  -webkit-font-feature-settings: normal !important;
+  -moz-font-feature-settings: normal !important;
+  font-family: 'Fira Code', 'Courier New', 'Consolas', 'Monaco', 'Menlo', monospace !important;
+  /* Don't override token colors - let Prism.js colors show through */
+}
+
+/* Prism token colors - ensure they're visible on dark background */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6a9955 !important;
+}
+
+.token.punctuation,
+.token.punctuation *,
+.token.punctuation span {
+  color: #e8e8e8 !important;
+  font-variant-ligatures: none !important;
+  font-feature-settings: normal !important;
+  -webkit-font-feature-settings: normal !important;
+  -moz-font-feature-settings: normal !important;
+  font-family: 'Fira Code', 'Courier New', 'Consolas', 'Monaco', 'Menlo', monospace !important;
+  unicode-bidi: normal !important;
+  direction: ltr !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* Force all code characters to use standard font */
+code[class*="language-"]::before,
+code[class*="language-"]::after,
+code[class*="language-"] *::before,
+code[class*="language-"] *::after {
+  font-family: 'Courier New', 'Consolas', 'Monaco', 'Menlo', monospace !important;
+  font-variant-ligatures: none !important;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #c8e6c9 !important;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #d7ba7d !important;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #e8e8e8 !important;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #4fc3f7 !important;
+}
+
+.token.function,
+.token.class-name {
+  color: #dcdcaa !important;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #d16969 !important;
+}
