@@ -70,7 +70,7 @@ export default defineConfig({
         manualChunks: (id) => {
           // Put React and all React-dependent libraries in the same chunk
           if (id.includes('node_modules')) {
-            // React core and router
+            // React core and router - MUST be in react-vendor
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
               return 'react-vendor';
             }
@@ -82,7 +82,14 @@ export default defineConfig({
             if (id.includes('react-hot-toast') || id.includes('lucide-react')) {
               return 'react-vendor';
             }
-            // Other vendor libraries
+            // Libraries that might use React hooks or APIs - catch all React dependencies
+            if (id.includes('use-') || id.includes('react-') || id.includes('sidecar') || 
+                id.includes('react-remove-scroll') || id.includes('react-style-singleton') ||
+                id.includes('use-callback-ref') || id.includes('use-sidecar') ||
+                id.includes('goober') || id.includes('@floating-ui')) {
+              return 'react-vendor';
+            }
+            // Other vendor libraries (non-React)
             return 'vendor';
           }
           // Separate large data files (they're already dynamically imported, so this helps with caching)
@@ -96,5 +103,9 @@ export default defineConfig({
       }
     },
     chunkSizeWarningLimit: 600, // Increase limit since we're splitting chunks
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true
+    }
   }
 })
