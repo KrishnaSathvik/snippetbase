@@ -68,11 +68,21 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // Separate vendor chunks
+          // Put React and all React-dependent libraries in the same chunk
           if (id.includes('node_modules')) {
+            // React core and router
             if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
               return 'react-vendor';
             }
+            // Radix UI and cmdk (they depend on React)
+            if (id.includes('@radix-ui') || id.includes('cmdk')) {
+              return 'react-vendor';
+            }
+            // Other React-dependent libraries
+            if (id.includes('react-hot-toast') || id.includes('lucide-react')) {
+              return 'react-vendor';
+            }
+            // Other vendor libraries
             return 'vendor';
           }
           // Separate large data files (they're already dynamically imported, so this helps with caching)
