@@ -4,8 +4,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Reset and base styles for mobile scrolling */
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  -webkit-text-size-adjust: 100%;
+}
+
 * {
   font-family: 'Inter', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background: #FAFAF5;
+  overflow-x: hidden;
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  /* Critical for mobile scrolling */
+  touch-action: pan-y !important;
+  overscroll-behavior-y: auto;
+  /* Force scrolling to work */
+  height: auto;
+  max-height: none;
+}
+
+/* Ensure scrolling works in mobile viewport */
+@media (max-width: 768px) {
+  html, body {
+    overflow-y: scroll !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+  
+  #root {
+    overflow-y: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -17,11 +72,6 @@ code, pre {
   font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', 'Consolas', 'Monaco', 'Menlo', monospace !important;
   font-variant-ligatures: none !important;
   font-feature-settings: normal !important;
-}
-
-body {
-  background: #FAFAF5;
-  overflow-x: hidden;
 }
 
 /* Neobrutalist Components */

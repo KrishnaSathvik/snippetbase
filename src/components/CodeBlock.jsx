@@ -1,18 +1,28 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Copy, Check } from 'lucide-react';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-tomorrow.css';
-// Import languages
-import 'prismjs/components/prism-python';
-import 'prismjs/components/prism-sql';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-yaml';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-docker';
-import 'prismjs/components/prism-javascript';
+
+// Language loading map - dynamically import only what's needed
+const languageLoaders = {
+  python: () => import('prismjs/components/prism-python'),
+  sql: () => import('prismjs/components/prism-sql'),
+  bash: () => import('prismjs/components/prism-bash'),
+  shell: () => import('prismjs/components/prism-bash'),
+  yaml: () => import('prismjs/components/prism-yaml'),
+  json: () => import('prismjs/components/prism-json'),
+  docker: () => import('prismjs/components/prism-docker'),
+  dockerfile: () => import('prismjs/components/prism-docker'),
+  javascript: () => import('prismjs/components/prism-javascript'),
+  js: () => import('prismjs/components/prism-javascript'),
+};
+
+// Cache for loaded languages
+const loadedLanguages = new Set();
 
 const CodeBlock = ({ code, language, showLineNumbers = true, isPreview = false, onCopy }) => {
   const [copiedAll, setCopiedAll] = useState(false);
+  const [isLanguageLoaded, setIsLanguageLoaded] = useState(false);
   const allButtonRef = useRef(null);
 
   // Map your language names to Prism language identifiers
@@ -35,6 +45,32 @@ const CodeBlock = ({ code, language, showLineNumbers = true, isPreview = false, 
   };
 
   const prismLanguage = languageMap[language?.toLowerCase()] || 'text';
+
+  // Dynamically load language if needed
+  useEffect(() => {
+    const loadLanguage = async () => {
+      if (prismLanguage === 'text' || loadedLanguages.has(prismLanguage)) {
+        setIsLanguageLoaded(true);
+        return;
+      }
+
+      const loader = languageLoaders[prismLanguage];
+      if (loader) {
+        try {
+          await loader();
+          loadedLanguages.add(prismLanguage);
+          setIsLanguageLoaded(true);
+        } catch (error) {
+          console.error(`Failed to load Prism language: ${prismLanguage}`, error);
+          setIsLanguageLoaded(true); // Still render, just without syntax highlighting
+        }
+      } else {
+        setIsLanguageLoaded(true); // Unknown language, render as text
+      }
+    };
+
+    loadLanguage();
+  }, [prismLanguage]);
 
   // Format code (basic beautification)
   const formatCode = (code) => {
@@ -168,7 +204,9 @@ const CodeBlock = ({ code, language, showLineNumbers = true, isPreview = false, 
                         color: '#e8e8e8'
                       }}
                       dangerouslySetInnerHTML={{
-                        __html: Prism.highlight(line, Prism.languages[prismLanguage] || Prism.languages.text, prismLanguage)
+                        __html: isLanguageLoaded
+                          ? Prism.highlight(line, Prism.languages[prismLanguage] || Prism.languages.text, prismLanguage)
+                          : line // Show plain text while loading
                       }}
                     />
                   </div>

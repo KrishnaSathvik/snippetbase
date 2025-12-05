@@ -12,14 +12,15 @@ SnippetBase is your complete knowledge base for developers. Find production-test
 
 ### Code Snippets (153+)
 - **Production-Ready Snippets** - PySpark, SQL, Python, dbt, Kafka, Airflow, Databricks, Docker
-- **Smart Search** - Search across title, tags, code content, and description
+- **Advanced Search** - Powered by MiniSearch with fuzzy matching, field boosts, prefix queries, and synonym expansion
 - **Language Filters** - Filter by technology stack (8 languages)
-- **Syntax Highlighting** - Powered by Prism.js with line numbers
+- **Syntax Highlighting** - Powered by Prism.js with dynamic language imports (tree-shaking optimized)
 - **Code Formatting** - Automatic beautification and formatting
-- **One-Click Copy** - Copy code to clipboard instantly
+- **One-Click Copy** - Copy code to clipboard instantly with toast notifications
 - **Favorites** - Star your most-used snippets
-- **Usage Tracking** - See how many times each snippet has been copied
 - **Pagination** - Browse snippets efficiently (8 per page)
+- **Short URLs** - Clean, short snippet IDs using nanoid
+- **Keyboard Navigation** - Arrow keys, Enter, C for copy, Esc to close
 
 ### Cheat Sheets (27+)
 - **Quick Reference Guides** - Comprehensive cheat sheets for various technologies
@@ -31,19 +32,31 @@ SnippetBase is your complete knowledge base for developers. Find production-test
 
 ### Design & UX
 - **Neobrutalist Design** - Bold, high-contrast UI that stands out
-- **Responsive** - Works perfectly on mobile, tablet, and desktop
-- **Offline-First** - Works without internet (localStorage)
-- **Fast Loading** - Code-splitting and lazy loading for optimal performance
+- **Responsive** - Works perfectly on mobile, tablet, and desktop with optimized touch scrolling
+- **Offline-First** - Progressive Web App (PWA) with IndexedDB storage for large datasets
+- **Fast Loading** - Code-splitting, lazy loading, and tree-shaking for optimal performance
 - **Error Handling** - Error boundaries and 404 pages for graceful error handling
+- **Command Palette** - Press Cmd/Ctrl+K to quickly search and navigate (powered by cmdk)
+- **Toast Notifications** - Beautiful toast notifications for user feedback
+
+### Data Management
+- **IndexedDB Storage** - Upgraded from localStorage for better performance and larger storage capacity
+- **Export/Import** - Export all snippets as JSON or import from JSON files
+- **Merge or Replace** - Choose to merge new snippets or replace existing ones on import
+- **Data Migration** - Automatic migration from localStorage to IndexedDB
 
 ## 🎯 Tech Stack
 
 - **Frontend:** React 18 + Vite
 - **Routing:** React Router DOM v7
 - **Styling:** Tailwind CSS
-- **Syntax Highlighting:** Prism.js
+- **Syntax Highlighting:** Prism.js (with dynamic imports for tree-shaking)
 - **Icons:** Lucide React
-- **Storage:** Browser localStorage
+- **Storage:** IndexedDB (via idb library) with localStorage migration
+- **Search:** MiniSearch for advanced in-browser search
+- **PWA:** vite-plugin-pwa for offline support and installability
+- **Command Palette:** cmdk for keyboard-driven navigation
+- **Notifications:** react-hot-toast for user feedback
 - **Deployment:** Vercel
 - **Fonts:** Inter (body), Space Grotesk (headings), JetBrains Mono/Fira Code (code)
 
@@ -116,18 +129,22 @@ snippetbase/
 ├── src/
 │   ├── components/          # Reusable components
 │   │   ├── CodeBlock.jsx    # Syntax highlighting & copy
+│   │   ├── CommandPalette.jsx # Cmd/Ctrl+K command palette
 │   │   ├── ErrorBoundary.jsx # Error handling
 │   │   ├── FilterBar.jsx    # Language filters
-│   │   ├── Header.jsx       # Navigation header
+│   │   ├── Header.jsx       # Navigation header with export/import
 │   │   ├── Footer.jsx        # Footer
 │   │   └── ...
 │   ├── data/                # Seed data
 │   │   ├── seedSnippets.js  # 153 code snippets
 │   │   └── cheatSheets.js   # 27 cheat sheets
 │   ├── hooks/               # Custom React hooks
-│   │   ├── useSnippets.js    # Snippet management
+│   │   ├── useSnippets.js    # Snippet management with IndexedDB
 │   │   ├── useCheatSheets.js # Cheat sheet management
-│   │   └── useLocalStorage.js # localStorage wrapper
+│   │   ├── useIndexedDB.js   # IndexedDB wrapper with migration
+│   │   └── useLocalStorage.js # localStorage wrapper (legacy)
+│   ├── utils/               # Utility functions
+│   │   └── searchIndex.js   # MiniSearch integration
 │   ├── pages/               # Page components
 │   │   ├── Home.jsx          # Landing page
 │   │   ├── LandingPage.jsx   # Landing page content
@@ -186,16 +203,46 @@ npm run build
 ## 🎯 Key Features Explained
 
 ### Code Quality Features
-- **Syntax Highlighting:** Full Prism.js integration with language detection
+- **Syntax Highlighting:** Full Prism.js integration with language detection and dynamic imports
 - **Line Numbers:** Numbered lines for easier reference
 - **Code Formatting:** Automatic beautification and whitespace cleanup
-- **Copy Functionality:** One-click copy for entire code blocks
+- **Copy Functionality:** One-click copy for entire code blocks with toast notifications
+
+### Search Features
+- **Advanced Search:** MiniSearch-powered search with:
+  - Field boosts (title > tags > description > code)
+  - Fuzzy matching for typos
+  - Prefix queries for autocomplete-like behavior
+  - Synonym expansion (e.g., "spark" matches "pyspark")
+- **Real-time Results:** Instant search results as you type
+- **Multi-field Search:** Searches across title, tags, description, and code content
 
 ### Performance Optimizations
 - **Code Splitting:** Route-based and data-based code splitting
 - **Lazy Loading:** Pages and data loaded on demand
+- **Tree-shaking:** Dynamic Prism.js language imports reduce bundle size
 - **Optimized Bundles:** Separate chunks for vendor, data, and code
-- **Caching:** Proper cache headers for static assets
+- **IndexedDB:** Efficient storage for large datasets
+- **Caching:** PWA service worker with cache-first strategy
+
+### PWA Features
+- **Installable:** Add to home screen on supported browsers
+- **Offline Support:** Works without internet connection
+- **Service Worker:** Automatic caching of assets and data
+- **Manifest:** App metadata for installation
+
+### Keyboard Shortcuts
+- **Cmd/Ctrl+K:** Open command palette
+- **Arrow Keys:** Navigate between snippets
+- **Enter:** Open selected snippet
+- **C:** Copy focused snippet
+- **Esc:** Close modals/command palette
+
+### Data Management
+- **Export:** Download all snippets as JSON file
+- **Import:** Upload JSON file to restore or merge snippets
+- **Migration:** Automatic migration from localStorage to IndexedDB
+- **Validation:** Import validation to ensure data integrity
 
 ### Error Handling
 - **Error Boundaries:** React error boundaries to catch and handle errors gracefully

@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
+import CommandPalette from './components/CommandPalette';
 
 // Lazy load pages for code-splitting
 const Home = lazy(() => import('./pages/Home'));
@@ -20,6 +21,7 @@ const LoadingFallback = () => (
 function App() {
   return (
     <ErrorBoundary>
+      <CommandPalette />
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           <Route path="/" element={<Home />} />

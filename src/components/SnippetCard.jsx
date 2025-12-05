@@ -88,20 +88,15 @@ const SnippetCard = ({ snippet, onCopy, onToggleFavorite }) => {
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="text-xs md:text-sm font-bold text-gray-600">
-            🔥 {snippet.timesUsed} copies
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={handleCopy}
-              className="neo-button bg-[#4ECDC4] text-black px-3 py-1.5 md:px-6 md:py-2 font-bold text-xs md:text-sm flex items-center gap-1 md:gap-2 whitespace-nowrap"
-            >
-              <Copy size={14} className="md:w-4 md:h-4" />
-              <span className="hidden sm:inline">COPY CODE</span>
-              <span className="sm:hidden">COPY</span>
-            </button>
-          </div>
+        <div className="flex items-center justify-end gap-2">
+          <button
+            onClick={handleCopy}
+            className="neo-button bg-[#4ECDC4] text-black px-3 py-1.5 md:px-6 md:py-2 font-bold text-xs md:text-sm flex items-center gap-1 md:gap-2 whitespace-nowrap"
+          >
+            <Copy size={14} className="md:w-4 md:h-4" />
+            <span className="hidden sm:inline">COPY CODE</span>
+            <span className="sm:hidden">COPY</span>
+          </button>
         </div>
       </div>
     </div>

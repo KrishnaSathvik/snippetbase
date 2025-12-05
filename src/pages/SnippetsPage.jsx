@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSnippets } from '../hooks/useSnippets';
+import toast from 'react-hot-toast';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
 import FilterBar from '../components/FilterBar';
 import StatsBar from '../components/StatsBar';
 import SnippetGrid from '../components/SnippetGrid';
 import Pagination from '../components/Pagination';
-import CopiedNotification from '../components/CopiedNotification';
 import CollectionsList from '../components/CollectionsList';
 import Footer from '../components/Footer';
 
@@ -16,7 +16,6 @@ const ITEMS_PER_PAGE = 8;
 function Home() {
   const location = useLocation();
   const snippetHook = useSnippets();
-  const [showCopiedNotification, setShowCopiedNotification] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeCollection, setActiveCollection] = useState(null);
 
@@ -55,8 +54,7 @@ function Home() {
 
   const handleCopy = (snippetId) => {
     snippetHook.incrementUseCount(snippetId);
-    setShowCopiedNotification(true);
-    setTimeout(() => setShowCopiedNotification(false), 1000);
+    toast.success('Copied!');
   };
 
   const handleCollectionClick = (collection) => {
@@ -261,9 +259,6 @@ function Home() {
       <CollectionsList onCollectionClick={handleCollectionClick} />
       
       <Footer />
-
-      {/* Modals */}
-      {showCopiedNotification && <CopiedNotification />}
     </div>
   );
 }

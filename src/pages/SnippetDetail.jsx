@@ -1,8 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSnippets } from '../hooks/useSnippets';
 import { Star, ArrowLeft } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import CopiedNotification from '../components/CopiedNotification';
+import { useEffect, useCallback, useMemo, useState } from 'react';
+import toast from 'react-hot-toast';
 import CodeBlock from '../components/CodeBlock';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -11,17 +11,45 @@ const SnippetDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const snippetHook = useSnippets();
-  const [showCopiedNotification, setShowCopiedNotification] = useState(false);
+  
+  // Find the snippet by ID - use useMemo to ensure it updates when snippets array changes
+  const snippet = useMemo(() => {
+    return snippetHook.snippets.find(s => s.id === id) || 
+           (snippetHook.seedSnippets || []).find(s => s.id === id);
+  }, [snippetHook.snippets, snippetHook.seedSnippets, id]);
+  
+  // Track current counts to force re-render when they change
+  const currentTimesUsed = snippet?.timesUsed || 0;
+  const currentViewCount = snippet?.viewCount || 0;
+  
+  // Force re-render when counts change by updating a state variable
+  const [, setUpdateTrigger] = useState(0);
+  useEffect(() => {
+    setUpdateTrigger(prev => prev + 1);
+  }, [currentTimesUsed, currentViewCount]);
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [id]);
 
-  // Find the snippet by ID - check both localStorage snippets and seed data as fallback
-  const snippet = snippetHook.snippets.find(s => s.id === id) || 
-                  (snippetHook.seedSnippets || []).find(s => s.id === id);
+  // Track view count when snippet is viewed (after snippet is found)
+  useEffect(() => {
+    if (snippet && id) {
+      snippetHook.incrementViewCount(snippet.id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]); // Track view when snippet ID changes
 
+  // Define handleCopy BEFORE early return (Rules of Hooks)
+  const handleCopy = useCallback(() => {
+    if (snippet) {
+      snippetHook.incrementUseCount(snippet.id);
+      toast.success('Copied!');
+    }
+  }, [snippet, snippetHook]);
+
+  // Early return AFTER all hooks
   if (!snippet) {
     return (
       <div className="min-h-screen bg-[#FAFAF5]">
@@ -42,6 +70,7 @@ const SnippetDetail = () => {
     );
   }
 
+  // Constants can be defined after early return (not hooks)
   const languageColors = {
     pyspark: '#FF6B6B',
     sql: '#4ECDC4',
@@ -52,12 +81,6 @@ const SnippetDetail = () => {
     airflow: '#FFEAA7',
     dockerfile: '#74B9FF',
     docker: '#74B9FF', // Keep for backward compatibility if any old data exists
-  };
-
-  const handleCopy = () => {
-    snippetHook.incrementUseCount(snippet.id);
-    setShowCopiedNotification(true);
-    setTimeout(() => setShowCopiedNotification(false), 1000);
   };
 
   return (
@@ -124,17 +147,9 @@ const SnippetDetail = () => {
             />
           </div>
 
-          {/* Metadata */}
-          <div className="flex items-center justify-between mb-4 md:mb-6 text-xs md:text-sm font-bold text-gray-600">
-            <div>
-              <span>🔥 {snippet.timesUsed} copies</span>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* Copied Notification */}
-      {showCopiedNotification && <CopiedNotification />}
       <Footer />
     </div>
   );
